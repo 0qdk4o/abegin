@@ -32,7 +32,11 @@ func StartupTLS(ln net.Listener, c chan error) {
 		return
 	}
 
-	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+	config := &tls.Config{
+		Certificates:             []tls.Certificate{cer},
+		NextProtos:               []string{"h2", "http/1.1"},
+		PreferServerCipherSuites: true,
+	}
 	fmt.Println("Starting Https service...")
 	err = mysrv.Serve(tls.NewListener(ln, config))
 	if err != nil {
