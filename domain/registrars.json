@@ -1,0 +1,20 @@
+[
+	{
+		"name": "Us2Demo",
+		"host": "https://test.httpapi.com",
+		"apikey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"authid": "000000",
+		"paths": {
+			"CheckAvailable": "/api/domains/available.json"
+		}
+	},
+	{
+		"name": "Us2",
+		"host": "https://httpapi.com",
+		"apikey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"authid": "000000",
+		"paths": {
+			"CheckAvailable": "/api/domains/available.json"
+		}
+	}
+]
