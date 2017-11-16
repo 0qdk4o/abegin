@@ -30,7 +30,8 @@ libxml2 >/dev/null \
  && apt-get -qq purge  --auto-remove \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
- && tar -xf /tmp/httpd.tar -C `dirname $PREFIX`
+ && tar -xf /tmp/httpd.tar -C `dirname $PREFIX` \
+ && rm -rf /tmp/httpd.tar
 
 EXPOSE 80 443
 CMD ["httpd-foreground"]
