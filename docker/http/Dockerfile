@@ -17,12 +17,8 @@ RUN set -ex \
  && : ${NGHTTP2_VERSION:="1.18.1-1"} \
  && apt-get -qq update \
  && apt-get -qq install --no-install-recommends \
-libapr1 \
 libaprutil1 \
-libaprutil1-ldap \
-libapr1-dev \
-libaprutil1-dev \
-liblua5.2-0 \
+zlib1g \
 libnghttp2-14=${NGHTTP2_VERSION} \
 libpcre++0v5 \
 libssl1.1 \

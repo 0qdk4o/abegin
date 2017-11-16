@@ -21,28 +21,29 @@ SHA256CHECK="$DISTFILE.sha256"
 # [Ref](https://forum.doozan.com/read.php?2,502,502,quote=1)
 
 buildDeps="\
-bzip2 \
-ca-certificates \
 gcc \
-liblua5.2-dev \
 libnghttp2-dev=$NGHTTP2_VERSION \
 libpcre++-dev \
 libssl-dev \
 libxml2-dev \
 zlib1g-dev \
+libaprutil1-dev \
 make"
 
-runtimeDeps="\
-libapr1 \
-libaprutil1 \
-libaprutil1-ldap \
-libapr1-dev \
-libaprutil1-dev \
-liblua5.2-0 \
-libnghttp2-14=$NGHTTP2_VERSION \
-libpcre++0v5 \
-libssl1.1 \
-libxml2"
+# runtime libs is automatically depended by dev-libs
+# runtimeDeps="\
+# libaprutil1 \
+# zlib1g \
+# libnghttp2-14=$NGHTTP2_VERSION \
+# libpcre++0v5 \
+# libssl1.1 \
+# libxml2"
+
+tools="\
+gpg \
+wget \
+patch \
+bzip2"
 
 # need download files map, download base url come from caller.(Dockfile)
 # value is iterated by key's name alphabet order
@@ -86,8 +87,8 @@ dload() {
 }
 
 apt-get -qq update
-apt-get install -qq --no-install-recommends $runtimeDeps $buildDeps >/dev/null
-apt-get install -qq gpg wget patch >/dev/null
+apt-get install -qq --no-install-recommends $buildDeps >/dev/null
+apt-get install -qq $tools >/dev/null
 
 dload
 rm -rf $SHA256CHECK "$GPGCHECK"
@@ -114,5 +115,7 @@ sed -ri -e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' \
         -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g'  "$PREFIX/conf/httpd.conf"
 cd `dirname $PREFIX`
 tar -czf /tmp/httpd.tar httpd/
+# here clearing is not necessary if this shell is called by Dockerfile in first stage
+# first stage usually produces dangling image, we should clear it outside the Dockerfile
 apt-get purge -qq --auto-remove $buildDeps >/dev/null
 rm -rf /tmp/httpd/ /var/lib/apt/lists/*
