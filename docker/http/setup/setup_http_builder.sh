@@ -28,6 +28,7 @@ libssl-dev \
 libxml2-dev \
 zlib1g-dev \
 libaprutil1-dev \
+libapr1-dev \
 make"
 
 # runtime libs is automatically depended by dev-libs

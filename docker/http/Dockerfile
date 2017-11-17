@@ -18,6 +18,7 @@ RUN set -ex \
  && apt-get -qq update \
  && apt-get -qq install --no-install-recommends \
 libaprutil1 \
+libapr1 \
 zlib1g \
 libnghttp2-14=${NGHTTP2_VERSION} \
 libpcre++0v5 \
