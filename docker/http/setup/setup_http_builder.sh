@@ -41,7 +41,7 @@ make"
 # libxml2"
 
 tools="\
-gpg \
+gnupg \
 wget \
 patch \
 bzip2"
@@ -118,5 +118,5 @@ cd `dirname $PREFIX`
 tar -czf /tmp/httpd.tar httpd/
 # here clearing is not necessary if this shell is called by Dockerfile in first stage
 # first stage usually produces dangling image, we should clear it outside the Dockerfile
-apt-get purge -qq --auto-remove $buildDeps >/dev/null
+apt-get autoremove -qq --purge $buildDeps >/dev/null
 rm -rf /tmp/httpd/ /var/lib/apt/lists/*
