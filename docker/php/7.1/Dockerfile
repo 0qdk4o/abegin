@@ -21,7 +21,10 @@ zlib1g \
 libbz2-1.0 \
 libgd3 \
 libmcrypt4 \
-libcurl3 >/dev/null \
+libcurl3 \
+libjpeg62-turbo \
+git \
+patch >/dev/null \
  && apt-get -qq purge --auto-remove \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \

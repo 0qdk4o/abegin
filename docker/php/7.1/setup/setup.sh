@@ -6,6 +6,7 @@ set -xue
 : ${DISTVERSION:="php-7.1.11"}
 : ${PREFIX:="/usr/local/php"}
 : ${HTTPDHOME:="/usr/local/httpd"}
+: ${APCUVER:="apcu-5.1.8"}
 cd $(dirname $0)
 SHA256FILE="$DISTFILE.sha256"
 GPGASCFILE="$DISTFILE.asc"
@@ -48,7 +49,8 @@ zlib1g-dev \
 libbz2-dev \
 libgd-dev \
 libmcrypt-dev \
-libcurl4-openssl-dev"
+libcurl4-openssl-dev \
+libjpeg62-turbo-dev"
 
 # runtimeDeps="\
 # libapr1 \
@@ -59,7 +61,8 @@ libcurl4-openssl-dev"
 # libbz2-1.0 \
 # libgd3 \
 # libmcrypt4 \
-# libcurl3"
+# libcurl3 \
+# libjpeg62-turbo"
 
 tools="\
 gnupg \
@@ -77,6 +80,7 @@ sha256sum -c "$SHA256FILE"
 gpg --import < key.gpg
 gpg --batch --verify "$GPGASCFILE" "$DISTFILE"
 tar xf $DISTFILE -C /tmp
+tar xf $APCUVER.tgz -C /tmp/$DISTVERSION/ext
 
 # clear tools to make a clean environment for compile php
 apt-get -qq autoremove --purge $tools > /dev/null
@@ -96,11 +100,12 @@ ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/curl
 --with-zlib \
 --with-bz2 \
 --with-gd \
+--with-jpeg-dir \
 --enable-opcache \
 --enable-zip \
 --with-mcrypt \
 --enable-mysqlnd \
---with-pdo-mysql=mysqlnd \
+--with-mysqli \
 --enable-pcntl \
 --without-pear \
 --disable-fileinfo \
@@ -110,6 +115,13 @@ ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/curl
 --without-pdo-sqlite \
 --disable-tokenizer
 make install
+
+# compile and install ACPu
+pushd ext/$APCUVER
+$PREFIX/bin/phpize
+./configure --with-php-config=$PREFIX/bin/php-config
+make install
+popd
 
 rm -rf /var/lib/apt/lists/*
 rm -rf $PREFIX/php/man
