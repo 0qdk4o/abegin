@@ -4,6 +4,6 @@
 
 > key.gpg  
 > php-7.1.11.tar.xz  
-> php-7.1.11.tar.xz  
-> php-7.1.11.tar.xz  
+> php-7.1.11.tar.xz.asc  
+> php-7.1.11.tar.xz.sha256  
 > apcu-5.1.8.tgz  
