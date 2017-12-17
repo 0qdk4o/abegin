@@ -65,8 +65,10 @@ func nextSmallest(a, b []int, c *[]int64) (res int64) {
 }
 
 func appendToComarr(c *[]int64, v int64) {
+	vi, vj := v>>32, v&0xffffffff
 	for i := 0; i < len(*c); i++ {
-		if (*c)[i] == v {
+		tempi, tempj := (*c)[i]>>32, (*c)[i]&0xffffffff
+		if vi >= tempi && vj >= tempj {
 			return
 		}
 	}
