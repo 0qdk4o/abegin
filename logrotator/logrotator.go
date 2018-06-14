@@ -18,10 +18,10 @@ type RotateWriter struct {
 }
 
 // New return new instance of Rotator
-func New(filename string) *RotateWriter {
+func New(filename string, backCount int) *RotateWriter {
 	r := &RotateWriter{
 		filename:    filename,
-		backupCount: 8,
+		backupCount: backCount,
 	}
 	r.updateNextRotateTs()
 
@@ -88,6 +88,14 @@ func (r *RotateWriter) deleteLogFiles(delTm int64) error {
 	for _, file := range names {
 		dateSuffix := strings.Split(file, ".")
 		timeString := dateSuffix[len(dateSuffix)-1]
+		if !isYMDFormat(timeString) {
+			continue
+		}
+		basename := strings.Join(dateSuffix[:len(dateSuffix)-1], ".")
+		if strings.Compare(basename, r.filename) != 0 {
+			continue
+		}
+
 		timeString += "T00:00:00+08:00"
 		tm, _ := time.Parse(time.RFC3339, timeString)
 		if tm.Unix() < delTm {
@@ -95,6 +103,34 @@ func (r *RotateWriter) deleteLogFiles(delTm int64) error {
 		}
 	}
 	return delErr
+}
+
+// isYMDForamt tell a strings such as 2018-06-14 is date format or not
+func isYMDFormat(ymd string) bool {
+	source := []byte(ymd)
+	if len(source) != 10 {
+		fmt.Println(len(source))
+		return false
+	}
+	isNumberic := func(c byte) bool {
+		if c < 48 || c > 57 {
+			return false
+		}
+		return true
+	}
+	for i, c := range source {
+		if i == 4 || i == 7 {
+			if c != 45 {
+				return false
+			} else {
+				continue
+			}
+		}
+		if !isNumberic(c) {
+			return false
+		}
+	}
+	return true
 }
 
 func (r *RotateWriter) rotate() error {

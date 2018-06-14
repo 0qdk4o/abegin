@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	r := logrotator.New("rotate.log")
+	r := logrotator.New("rotate.log", 8)
 	log.SetOutput(r)
 
 	count := 0
