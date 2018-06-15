@@ -62,7 +62,6 @@ func (r *RotateWriter) Write(p []byte) (n int, err error) {
 
 func (r *RotateWriter) isNeedRotation() bool {
 	if time.Now().Unix() > r.nextRotateTs {
-		fmt.Println("NeedRotation")
 		return true
 	}
 	return false
