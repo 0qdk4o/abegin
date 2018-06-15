@@ -122,9 +122,8 @@ func isYMDFormat(ymd string) bool {
 		if i == 4 || i == 7 {
 			if c != 45 {
 				return false
-			} else {
-				continue
 			}
+			continue
 		}
 		if !isNumberic(c) {
 			return false
