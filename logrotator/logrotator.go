@@ -91,7 +91,7 @@ func (r *RotateWriter) deleteLogFiles(delTm int64) error {
 			continue
 		}
 		basename := strings.Join(dateSuffix[:len(dateSuffix)-1], ".")
-		if strings.Compare(basename, r.filename) != 0 {
+		if strings.Compare(basename, filepath.Base(r.filename)) != 0 {
 			continue
 		}
 
@@ -108,7 +108,6 @@ func (r *RotateWriter) deleteLogFiles(delTm int64) error {
 func isYMDFormat(ymd string) bool {
 	source := []byte(ymd)
 	if len(source) != 10 {
-		fmt.Println(len(source))
 		return false
 	}
 	isNumberic := func(c byte) bool {
@@ -154,5 +153,8 @@ func (r *RotateWriter) rotate() error {
 		return err
 	}
 
-	return r.deleteLogFiles(time.Now().AddDate(0, 0, -r.backupCount).Unix())
+	delBefore := time.Now().AddDate(0, 0, -r.backupCount).Format("2006-01-02")
+	delBefore += "T00:00:00+08:00"
+	tm, _ := time.Parse(time.RFC3339, delBefore)
+	return r.deleteLogFiles(tm.Unix())
 }
